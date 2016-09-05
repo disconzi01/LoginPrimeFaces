@@ -1,0 +1,30 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://xmlns.jcp.org/jsf/html" 
+      xmlns:f="http://java.sun.com/jsf/core">
+    <h:head>
+        <title>Acceso de Usuario</title>
+    </h:head>
+    <h:body>
+        <h1>Inicio de sesión</h1>        
+        <h:form>
+            <h:panelGrid columns="2">
+                <h:outputLabel value="Email: " />
+                <h:inputText value="#{usuariosBean.usuario.email}" validatorMessage="Ingrese un correo válido">
+                    <f:validateRegex pattern="^\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*\s*$" />
+                </h:inputText>
+
+                <h:outputLabel value="Contraseña: " />
+                <h:inputSecret value="#{usuariosBean.usuario.contrasena}" validatorMessage="Ingrese su contraseña">
+                    <f:validateRegex pattern="[^\s]+" />
+                </h:inputSecret>
+
+                <h:commandButton actionListener="#{usuariosBean.validarUsuario()}" value="Ingresar" />
+            </h:panelGrid>
+        </h:form>
+        <br />
+        <h:form>
+            <h:commandLink actionListener="#{sessionBean.redirigirRecordarContrasena()}" value="Recordar contraseña" />             
+        </h:form>
+    </h:body>
+</html>
