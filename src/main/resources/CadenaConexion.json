@@ -1,0 +1,6 @@
+{
+    "hostPath": "//localhost:5432/sw2login",
+    "user": "postgres",
+    "password": "1234",
+    "ssl": "false"
+}

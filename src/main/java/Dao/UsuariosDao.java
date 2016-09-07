@@ -5,11 +5,7 @@
  */
 package Dao;
 
-import Modelo.Usuarios;
-import Persistencia.NewHibernateUtil;
-import java.util.List;
-import org.hibernate.Session;
-import org.hibernate.query.Query;
+import java.sql.ResultSet;
 
 /**
  *
@@ -17,52 +13,62 @@ import org.hibernate.query.Query;
  */
 public class UsuariosDao {
  
-    public boolean validarUsusario(String email, String contrasena){
-        Session session = null;
-        List<Usuarios> usuario;
+    public static boolean validarUsuario(String email, String contrasena) throws Exception{
+        
         boolean esValido = false;
+        ManejadorBaseDatos oBaseDatos = null;
+        String exceptionMessage = null;
         
         try {
-            session = NewHibernateUtil.getSessionFactory().openSession();
-            Query query = session.createQuery("from Usuarios where email='"+email+"' and contrasena='"+contrasena+"'");
-            usuario = query.list();
+            oBaseDatos = new ManejadorBaseDatos();
+            ResultSet resultados = oBaseDatos.consultar("SELECT COUNT(*) FROM Usuarios WHERE email='"+email+"' and contrasena='"+contrasena+"'");
             
-            if(usuario.size()==1)
-                esValido = true;
+            if(resultados.next())
+                if(resultados.getInt(1) == 1)
+                    esValido = true;
         }
         catch(Exception ex){
-            System.out.println(ex.getMessage());
+            exceptionMessage = ex.getMessage();
         }
         catch(Throwable ex){
-            System.out.println(ex.getMessage());
+            exceptionMessage = ex.getMessage();
         }
         finally{
-            if(session != null)
-               session.close();
+            if(oBaseDatos != null)
+                oBaseDatos.destruirConexion();
         }
+        if(exceptionMessage!=null)
+            throw new Exception(exceptionMessage);
+        
         return esValido;
     }
     
-    public String obtenerContrasena(String email){
-        Session session = null;
-        List<Usuarios> usuario;
+    public static String obtenerContrasena(String email) throws Exception{
+
         String contrasenaUsuario = null;
-        
+        ManejadorBaseDatos oBaseDatos = null;
+        String exceptionMessage = null;
+               
         try {
-            session = NewHibernateUtil.getSessionFactory().openSession();
-            Query query = session.createQuery("from Usuarios where email='"+email+"'");
-            usuario = query.list();
+            oBaseDatos = new ManejadorBaseDatos();
+            ResultSet resultados = oBaseDatos.consultar("SELECT contrasena FROM Usuarios WHERE email='"+email+"'");
             
-            if(usuario.size()==1)
-                contrasenaUsuario = usuario.get(0).getContrasena();
+            if(resultados.next())
+                contrasenaUsuario = resultados.getString("contrasena");
         }
         catch(Exception ex){
-            
+            exceptionMessage = ex.getMessage();
+        }
+        catch(Throwable ex){
+            exceptionMessage = ex.getMessage();
         }
         finally{
-            if(session != null)
-               session.close();
+            if(oBaseDatos != null)
+                oBaseDatos.destruirConexion();
         }
+        if(exceptionMessage!=null)
+            throw new Exception(exceptionMessage);
+        
         return contrasenaUsuario;
     }
 }

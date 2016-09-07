@@ -21,21 +21,31 @@ import javax.servlet.http.HttpSession;
 public class UsuariosBean {
     
     private Usuarios usuario;
+    private boolean usuarioInvalido;
+    private String exceptionMessage;
     
     /**
      * Creates a new instance of UsuariosBean
      */
     public UsuariosBean() {
         usuario = new Usuarios();
+        usuarioInvalido = false;
+        exceptionMessage = null;
     }
     
     public void validarUsuario(){
-        UsuariosDao usuariosDao = new UsuariosDao();
-       
-        boolean resultado = usuariosDao.validarUsusario(getUsuario().getEmail(), getUsuario().getContrasena());
+        boolean resultado;
         
-        if(resultado)
-            iniciarSesion(getUsuario().getEmail());    
+        try{
+            resultado = UsuariosDao.validarUsuario(getUsuario().getEmail(), getUsuario().getContrasena());
+            if(resultado)
+                iniciarSesion(getUsuario().getEmail());
+            else
+                setUsuarioInvalido(true);
+        }
+        catch(Exception ex){
+            exceptionMessage = ex.getMessage();
+        }
     }
     
     private void iniciarSesion(String email){
@@ -51,11 +61,18 @@ public class UsuariosBean {
     }
     
     public void recordarContrasena(){
-        UsuariosDao usuariosDao = new UsuariosDao();
+        String contrasena;
         
-        //String contrasena = usuariosDao.obtenerContrasena(getUsuario().getEmail());
-        
-        usuario.setContrasena("Nueva");
+        try{
+            contrasena = UsuariosDao.obtenerContrasena(getUsuario().getEmail());
+            if(contrasena != null)
+                usuario.setContrasena(contrasena);
+            else
+                setUsuarioInvalido(true);
+        }
+        catch(Exception ex){
+            exceptionMessage = ex.getMessage();
+        }
     }
 
     /**
@@ -70,5 +87,33 @@ public class UsuariosBean {
      */
     public void setUsuario(Usuarios usuario) {
         this.usuario = usuario;
+    }
+
+    /**
+     * @return the usuarioInvalido
+     */
+    public boolean isUsuarioInvalido() {
+        return usuarioInvalido;
+    }
+
+    /**
+     * @param usuarioInvalido the usuarioInvalido to set
+     */
+    public void setUsuarioInvalido(boolean usuarioInvalido) {
+        this.usuarioInvalido = usuarioInvalido;
+    }
+    
+    /**
+     * @return the exceptionMessage
+     */
+    public String getExceptionMessage() {
+        return exceptionMessage;
+    }
+
+    /**
+     * @param exceptionMessage the exceptionMessage to set
+     */
+    public void setExceptionMessage(String exceptionMessage) {
+        this.exceptionMessage = exceptionMessage;
     }
 }

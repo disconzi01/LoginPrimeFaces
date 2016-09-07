@@ -16,7 +16,6 @@ import javax.servlet.http.HttpSession;
  */
 @ManagedBean
 public class SessionBean {
-
     /**
      * Creates a new instance of SessionBean
      */
