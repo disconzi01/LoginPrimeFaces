@@ -1,8 +1,8 @@
-<?xml version='1.0' encoding='UTF-8' ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:h="http://xmlns.jcp.org/jsf/html" xmlns:f="http://java.sun.com/jsf/core"
-      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+      xmlns:p="http://primefaces.org/ui">
+<f:view contentType="text/html">
     <h:head>
         <title>Recordar Contraseña</title>
         <link rel="stylesheet" href="css/main.css" />
@@ -13,34 +13,27 @@
                 <td>
                     <h1>Recordar Contraseña</h1>        
                     <h:form>
+                        <p:growl showDetail="true"/>
                         <h:panelGrid columns="2">
                             <h:outputLabel value="Email: " />
-                            <h:inputText value="#{usuariosBean.usuario.email}" validatorMessage="Ingrese un correo válido">
+                            <p:inputText value="#{usuariosBean.usuario.email}" validatorMessage="Ingrese un correo válido">
                                 <f:validateRegex pattern="^\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*\s*$" />
-                            </h:inputText>
+                            </p:inputText>
+                            
+                            <br />
+                            <p:commandButton actionListener="#{usuariosBean.recordarContrasena()}" value="Recordar contraseña" validateClient="true" ajax="false" />
                         </h:panelGrid>
-                        <br />
-                        <h:commandButton actionListener="#{usuariosBean.recordarContrasena()}" value="Recordar contraseña" />
-
                         <h2>
                             <h:outputLabel rendered="#{not empty usuariosBean.usuario.contrasena}" 
                                            value="Contraseña: #{usuariosBean.usuario.contrasena}" />
                         </h2>
                     </h:form>
                     <h:form>
-                        <div>
-                            <h:commandLink actionListener="#{sessionBean.cerrarSesion()}" value="Regresar" />    
-                        </div>
+                        <p:commandLink actionListener="#{sessionBean.cerrarSesion()}" value="Regresar" />
                     </h:form>
-                    <c:if test="#{usuariosBean.usuarioInvalido}">
-                        <script>
-                            alert("Usuario no existe");
-                        </script>
-                    </c:if>
-                    <h:outputLabel rendered="#{not empty usuariosBean.exceptionMessage}" 
-                                           value="Excepción: #{usuariosBean.exceptionMessage}" />
                 </td>
             </tr>
         </table>
     </h:body>
+</f:view>
 </html>

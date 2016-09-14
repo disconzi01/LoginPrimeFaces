@@ -6,6 +6,7 @@
 package Bean;
 
 import Dao.UsuariosDao;
+import Util.ManejadorMensajes;
 import Modelo.Usuarios;
 import java.io.IOException;
 import javax.faces.bean.ManagedBean;
@@ -21,16 +22,12 @@ import javax.servlet.http.HttpSession;
 public class UsuariosBean {
     
     private Usuarios usuario;
-    private boolean usuarioInvalido;
-    private String exceptionMessage;
     
     /**
      * Creates a new instance of UsuariosBean
      */
     public UsuariosBean() {
         usuario = new Usuarios();
-        usuarioInvalido = false;
-        exceptionMessage = null;
     }
     
     public void validarUsuario(){
@@ -41,10 +38,10 @@ public class UsuariosBean {
             if(resultado)
                 iniciarSesion(getUsuario().getEmail());
             else
-                setUsuarioInvalido(true);
+                ManejadorMensajes.mostrarError(FacesContext.getCurrentInstance(), "Error",  "Usuario o contraseña invalida");
         }
         catch(Exception ex){
-            exceptionMessage = ex.getMessage();
+            ManejadorMensajes.mostrarError(FacesContext.getCurrentInstance(), "Exception",  ex.getMessage());
         }
     }
     
@@ -68,10 +65,10 @@ public class UsuariosBean {
             if(contrasena != null)
                 usuario.setContrasena(contrasena);
             else
-                setUsuarioInvalido(true);
+                ManejadorMensajes.mostrarError(FacesContext.getCurrentInstance(), "Error",  "El usuario no existe");
         }
         catch(Exception ex){
-            exceptionMessage = ex.getMessage();
+            ManejadorMensajes.mostrarError(FacesContext.getCurrentInstance(), "Exception",  ex.getMessage());
         }
     }
 
@@ -87,33 +84,5 @@ public class UsuariosBean {
      */
     public void setUsuario(Usuarios usuario) {
         this.usuario = usuario;
-    }
-
-    /**
-     * @return the usuarioInvalido
-     */
-    public boolean isUsuarioInvalido() {
-        return usuarioInvalido;
-    }
-
-    /**
-     * @param usuarioInvalido the usuarioInvalido to set
-     */
-    public void setUsuarioInvalido(boolean usuarioInvalido) {
-        this.usuarioInvalido = usuarioInvalido;
-    }
-    
-    /**
-     * @return the exceptionMessage
-     */
-    public String getExceptionMessage() {
-        return exceptionMessage;
-    }
-
-    /**
-     * @param exceptionMessage the exceptionMessage to set
-     */
-    public void setExceptionMessage(String exceptionMessage) {
-        this.exceptionMessage = exceptionMessage;
     }
 }

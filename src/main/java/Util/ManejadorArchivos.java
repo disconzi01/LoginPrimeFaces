@@ -23,7 +23,8 @@ public class ManejadorArchivos {
         try {
             URL resource = context.getClass().getResource(resourceName);
             File file = new File(resource.toURI());
-            file.setReadOnly();
+            file.setReadable(true);
+            //file.setReadOnly();
             FileInputStream fileInput = new FileInputStream(file);
 
             byte[] data = new byte[(int) file.length()];
